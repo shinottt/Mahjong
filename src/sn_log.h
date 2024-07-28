@@ -102,8 +102,6 @@ std::string sn_format(std::string_view fmt, Args&&... args){
 } 
 
 
-
-
 enum LogLevel{
     SN_NONE,
     SN_DEBUG,

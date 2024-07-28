@@ -10,10 +10,12 @@ enum TileType: int {
 
 //不完整，顺，刻，杠，对
 enum BlockType: int {
-    _INCOMPLETE, _SHUNTSU, _KOUTSU, _KANTSU, _TOITSU
+    _INCOMPLETED, _SHUNTSU, _KOUTSU, _KANTSU, _TOITSU
 };
 
-
+enum BlockColor: int {
+    _MAN, _PIN, _SUO, _WIND, _SANGEN
+};
 
 
 enum CharacterId: int {

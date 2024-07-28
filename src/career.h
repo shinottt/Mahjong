@@ -24,11 +24,15 @@ public:
     int ippatsu_ = 0;
     int menzentsumo_ = 0;
 
-
+    int dora_ = 0;
+    int dora_red_ = 0;
+    int dora_ura_ = 0;
 
 
     void read_from_file();
     void write_to_file();
+
+    void print_data();
 
 
 };
@@ -54,7 +58,9 @@ void Career::write_to_file(){
 }
 
 
+void Career::print_data(){
 
+}
 
 
 

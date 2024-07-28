@@ -29,6 +29,8 @@ public:
     //手中的牌
     std::vector<Tile> hand_;
 
+    //吃，碰，杠的blocks
+    std::vector<Block> blocks_;
 
     //牌河
     std::vector<Tile> river_;

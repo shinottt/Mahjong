@@ -73,8 +73,9 @@ void State::tiles_init(){
 
     //获取硬件噪声产生随机数
     std::random_device rd;
+    std::default_random_engine dre(rd());
     //简单的随机洗牌
-    std::shuffle(tiles_.begin(), tiles_.end(), rd());
+    std::shuffle(tiles_.begin(), tiles_.end(), rd);
 
 }
 
