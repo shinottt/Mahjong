@@ -10,6 +10,7 @@ class Tile{
 public:
     TileType type_;
     bool is_red_;
+    TileState tile_state_;    
 
     bool is_wind();            //是否风牌
     bool is_sangen();          //是否三元牌
@@ -17,6 +18,8 @@ public:
     bool is_tsu();              //是否字牌：风牌+三元牌
     bool is_yaojiu();           //是否幺九牌：老头牌+字牌
     bool is_green();            //是否绿牌：判断绿一色
+
+    Tile()=default;
 
 
     //不判断红宝
@@ -101,7 +104,13 @@ public:
     std::vector<Tile> tiles_;       //block中牌的集合
 
 
+
     //完整的block才用下面的判断
+    bool is_wind();            //是否风牌block
+    bool is_sangen();          //是否三元牌block
+    bool is_19();              //是否老头牌block: [123], [789], [111], [999]
+
+
 
 
 
@@ -160,6 +169,23 @@ public:
 
 };
 
+
+bool Block::is_wind(){
+    if(color_ == BlockColor::_WIND){return true;}
+    return false;
+}
+
+bool Block::is_sangen(){
+    if(color_ == BlockColor::_SANGEN){return true;}
+    return false;
+}
+
+bool Block::is_19(){
+    for(auto& temp_tile_ : tiles_){
+        if(temp_tile_.is_19()){return true;}
+    }
+    return false;
+}
 
 
 

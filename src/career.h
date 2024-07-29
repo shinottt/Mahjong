@@ -21,6 +21,7 @@ public:
     //各种役的数量
     int riichi_ = 0;
     int double_riichi_ = 0;
+    int tanyao_ = 0;
     int ippatsu_ = 0;
     int menzentsumo_ = 0;
 
@@ -32,7 +33,8 @@ public:
     void read_from_file();
     void write_to_file();
 
-    void print_data();
+    void print_data_to_file();
+    void print_data_to_console();
 
 
 };
@@ -58,8 +60,12 @@ void Career::write_to_file(){
 }
 
 
-void Career::print_data(){
+void Career::print_data_to_file(){
 
+}
+
+void Career::print_data_to_console(){
+    
 }
 
 

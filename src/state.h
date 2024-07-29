@@ -5,14 +5,21 @@
 #include<random>         //std::random_device
 #include<algorithm>      //std::shuffle
 #include<array>
-
+#include<memory>
+#include<string>
+#include<fstream>
 #include"tile.h"
-
-
 
 /*
 规则设置
 */
+
+const std::string RULE_DEFAULT_FILE_PATH = "rule_default.dat";
+const std::string RULE_FILE_PATH = "rule.dat";
+
+
+
+
 class Rule{
 public:
 
@@ -25,7 +32,38 @@ public:
     int max_renchan_;   //最大连庄数
 
 
-    void set_default();         //设置默认规则
+
+    Rule()=default;
+
+    //设置默认规则
+    void set_default(){
+        std::fstream file_;
+        file_.open(RULE_DEFAULT_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
+        while(!file_.peek() != EOF){
+            file_.read((char*)this, sizeof(*this));
+        }
+        file_.close();
+        sn_consolelog_info("default rule loaded from file: {}", RULE_DEFAULT_FILE_PATH);
+    }
+
+    //读取玩家的规则设置
+    void read_rule(){
+        std::fstream file_;
+        file_.open(RULE_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
+        while(file_.peek() != EOF){
+            file_.read((char*)this, sizeof(*this));
+        }
+        file_.close();
+        sn_consolelog_info("rule loaded from file: {}", RULE_FILE_PATH);
+    }
+
+    void save_rule(){
+        std::fstream file_;
+        file_.open(RULE_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
+        file_.write((const char*)this, sizeof(*this));
+        file_.close();
+        sn_consolelog_info("rule saved to file: {}", RULE_FILE_PATH);
+    }
 
 
 };
@@ -47,6 +85,9 @@ public:
     int num_richii_;            //立直数量：四家立直
     int num_kan_;               //杠的数量：四杠散了
 
+    std::shared_ptr<Rule> rule_;    //规则设置
+
+
 	/*
 	0-121: 正常摸的牌。122-131: 宝牌指示牌。132-135: 岭上牌
 	宝牌指示牌的对应关系：
@@ -55,6 +96,10 @@ public:
 	岭上牌从后往前摸
 	*/
     std::array<Tile, 136> tiles_;   //牌库：136张牌
+
+
+
+    State()=default;
 
 
 
@@ -69,6 +114,12 @@ public:
 void State::tiles_init(){
     for(int i=0; i<136; i++){
         tiles_[i].type_ = static_cast<TileType>(i/4);
+        tiles_[i].tile_state_ = TileState::_TSUMO;
+    }
+
+    //132-135: 岭上牌，状态为_KAN
+    for(int i = 132; i<=135; ++i){
+        tiles_[i].tile_state_ = TileState::_KAN;
     }
 
     //获取硬件噪声产生随机数
