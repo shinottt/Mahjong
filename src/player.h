@@ -3,6 +3,7 @@
 
 
 #include<memory>
+#include<algorithm>
 
 #include"state.h"
 #include"tile.h"
@@ -13,6 +14,25 @@
 player类中算分
 
 */
+
+
+
+
+class Blocknum{
+public:
+    int num_3 = 0;  //刻
+    int num_111 = 0;    //顺子
+    int num_2 = 0;  //对
+
+    Blocknum()=default;
+
+    void operator=(const Blocknum& aim){
+        num_3 = aim.num_3;
+        num_111 = aim.num_111;
+        num_2 = aim.num_2;
+    }
+};
+
 
 class Hu{
 public:
@@ -87,21 +107,28 @@ public:
 
 
     void hand_to_block();
-
+    //13张牌判断是否听牌
+    void is_ten(Blocknum& hand_block_num_, int* handnum_);
 
 
     int cal_yaku(Hu&);    //使用 Player(class) 和 Hu(class) 中的数据计算番数和役：一般胡牌
 
+    void search_111_LtoR(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从左往右取[111]顺子放入block_temp_中
+    void search_111_RtoL(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从右往左取[111]顺子放入block_temp_中
+    void search_3_all(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);  //取手中所有[3]
 
+    //缺[2]的听牌型判断
+    void hu_type_1(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);
+    //[111]不完整的听牌型判断
+    void hu_type_2(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);
 
+    void take_111(Block& block, int t1);        //从手牌中取[111]顺子放入block中
+    void take_3(Block& block, int t1);          //取[3]刻子
+    void take_2(Block& block, int t1);          //取[2]对子
 
-    void take_111(Block& block);        //从手牌中取[111]顺子放入block中
-    void take_3(Block& block);          //取[3]刻子
-    void take_2(Block& block);          //取[2]对子
-
-    void take_1(Block& block);          //取[1]单张牌
-    void take_11(Block& block);         //取[11]挨着的顺子2张
-    void take_1_1(Block& block);        //取[1 1]不挨着的顺子2张
+    void take_1(Block& block, int t1);          //取[1]单张牌
+    void take_11(Block& block, int t1);         //取[11]挨着的顺子2张
+    void take_1_1(Block& block, int t1);        //取[1 1]不挨着的顺子2张
 
 
     //返回番数
@@ -150,146 +177,6 @@ public:
 
 };
 
-
-
-
-int Player::cal_yaku(Hu& cal_hu_){
-    int fan = 0;
-    int f = 0;
-
-    f = is_riichi();
-    if(f != 0){
-        fan += f;
-        if(f == 1){cal_hu_.yaku_.push_back(YakuType::_RIICHI);}
-        if(f == 2){cal_hu_.yaku_.push_back(YakuType::_DOUBLERIICHI);}
-    }
-    f = is_tanyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_TANYAO);
-    }
-    f = is_menzentsumo();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_MENZENTSUMO);
-    }
-
-
-    
-    f = is_rinshankaihou();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_RINSHANKAIHOU);
-    }
-
-    
-    
-    f = is_chantaiyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_CHANTAIYAO);
-    }
-    
-
-
-    f = is_junchantaiyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_JUNCHANTAIYAO);
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    return fan;
-}
-
-
-
-
-
-
-
-
-
-int Player::is_riichi(){
-    if(is_double_riichi_){return 2;}
-    else if(is_riichi_){return 1;}
-    return 0;
-}
-
-int Player::is_tanyao(){
-    for(auto& temp_tile_ : hand_){
-        if(temp_tile_.is_yaojiu()){return 0;}
-    }
-    for(auto& temp_tile_ : fixed_tiles_){
-        if(temp_tile_.is_yaojiu()){return 0;}
-    }
-    return 1;
-}
-
-int Player::is_menzentsumo(){
-    if(is_menzen_ && next_tile_.tile_state_ == TileState::_TSUMO){return 1;}
-    return 0;
-}
-
-
-
-
-
-
-
-int Player::is_rinshankaihou(){
-    if(next_tile_.tile_state_ == TileState::_KAN){return 1;}
-    return 0;
-}
-
-
-
-
-int Player::is_chantaiyao(){
-    bool z_tile_ = false;   //字牌，无字牌return 0
-    for(auto& temp_tile_ : hand_){
-        if(!temp_tile_.is_19() || !temp_tile_.is_tsu()){return 0;}
-        if(temp_tile_.is_tsu()){z_tile_ = true;}
-    }
-    if(is_menzen_){
-        if(z_tile_){return 2;}
-        else{return 0;}
-    }
-    else{
-        for(auto& temp_tile_ : fixed_tiles_){
-            if(!temp_tile_.is_19() || !temp_tile_.is_tsu()){return 0;}
-            if(temp_tile_.is_tsu()){z_tile_ = true;}
-        }
-    }
-    if(z_tile_){return 1;}
-    return 0;
-}
-
-
-
-
-int Player::is_junchantaiyao(){
-    for(auto& temp_tile_ : hand_){
-        if(!temp_tile_.is_19()){return 0;}
-    }
-    if(is_menzen_){return 3;}
-    else {
-        for(auto& temp_tile_ : fixed_tiles_){
-            if(!temp_tile_.is_19()){return 0;}
-        }
-    }
-    return 2;
-}
 
 
 

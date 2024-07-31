@@ -1,6 +1,10 @@
 #ifndef _MAHJONG_ENUMS_HEADER_
 #define _MAHJONG_ENUMS_HEADER_
 
+
+#include"sn_log.h"
+
+
 enum TileType: int {
     _1m, _2m, _3m, _4m, _5m, _6m, _7m, _8m, _9m,
     _1p, _2p, _3p, _4p, _5p, _6p, _7p, _8p, _9p,
@@ -29,7 +33,7 @@ enum CharacterId: int {
 
 //听牌类型：单骑，两面，嵌张，边张，对倒
 enum TenType: int {
-    _TANKI, _RYANMEN, _KANCHAN, _PENCHAN, _SHANPON
+    _NOTING, _TANKI, _RYANMEN, _KANCHAN, _PENCHAN, _SHANPON
 };
 
 //无，满贯，跳满，倍满，三倍满，累计役满，役满，双倍役满
@@ -96,6 +100,96 @@ enum YakuType: int {
 
 
 };
+
+
+
+static BlockColor TileTypeToBlockColor(TileType type_);
+static TileType IndexToTileType(int index_);
+
+
+static BlockColor TileTypeToBlockColor(TileType type_){
+    int c = static_cast<int>(type_)/9;
+    int t = static_cast<int>(type_)%9;
+    switch(c){
+        case 0:
+            return BlockColor::_MAN;break;
+        case 1:
+            return BlockColor::_PIN;break;
+        case 2:
+            return BlockColor::_SUO;break;
+        case 3:
+            if(t >= 0 && t <= 3){return BlockColor::_WIND;break;}
+            else if(t >= 4 && t <= 6){return BlockColor::_SANGEN;break;}
+        default:
+            sn_consolelog_debug("function TileTypeToBlockColor debug: invalid tile type");
+            exit(1);
+            break;
+    }
+}
+
+
+static TileType IndexToTileType(int index_){
+    int c = index_/9;
+    int t = index_%9;
+    switch(c){
+        case 0:
+            switch(t){
+                case 0: return TileType::_1m;break;
+                case 1: return TileType::_2m;break;
+                case 2: return TileType::_3m;break;
+                case 3: return TileType::_4m;break;
+                case 4: return TileType::_5m;break;
+                case 5: return TileType::_6m;break;
+                case 6: return TileType::_7m;break;
+                case 7: return TileType::_8m;break;
+                case 8: return TileType::_9m;break;
+                default:break;
+            }
+        case 1:
+            switch(t){
+                case 0: return TileType::_1p;break;
+                case 1: return TileType::_2p;break;
+                case 2: return TileType::_3p;break;
+                case 3: return TileType::_4p;break;
+                case 4: return TileType::_5p;break;
+                case 5: return TileType::_6p;break;
+                case 6: return TileType::_7p;break;
+                case 7: return TileType::_8p;break;
+                case 8: return TileType::_9p;break;
+                default:break;
+            }
+        case 2:
+            switch(t){
+                case 0: return TileType::_1s;break;
+                case 1: return TileType::_2s;break;
+                case 2: return TileType::_3s;break;
+                case 3: return TileType::_4s;break;
+                case 4: return TileType::_5s;break;
+                case 5: return TileType::_6s;break;
+                case 6: return TileType::_7s;break;
+                case 7: return TileType::_8s;break;
+                case 8: return TileType::_9s;break;
+                default:break;
+            }
+        case 3:
+            switch(t){
+                case 0: return TileType::_1z;break;
+                case 1: return TileType::_2z;break;
+                case 2: return TileType::_3z;break;
+                case 3: return TileType::_4z;break;
+                case 4: return TileType::_5z;break;
+                case 5: return TileType::_6z;break;
+                case 6: return TileType::_7z;break;
+                default:break;
+            }
+        default:
+            sn_consolelog_debug("function IndexToTileType debug: invalid index");
+            exit(1);
+            break;
+    }
+}
+
+
 
 
 #endif      // _MAHJONG_ENUMS_HEADER_

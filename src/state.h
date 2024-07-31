@@ -72,7 +72,6 @@ public:
 
 
 
-
 /*
 场上的情况，包括风，牌库
 */
@@ -111,7 +110,7 @@ public:
 
 
 
-void State::tiles_init(){
+inline void State::tiles_init(){
     for(int i=0; i<136; i++){
         tiles_[i].type_ = static_cast<TileType>(i/4);
         tiles_[i].tile_state_ = TileState::_TSUMO;
@@ -129,11 +128,6 @@ void State::tiles_init(){
     std::shuffle(tiles_.begin(), tiles_.end(), rd);
 
 }
-
-
-
-
-
 
 
 

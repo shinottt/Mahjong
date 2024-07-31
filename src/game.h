@@ -12,8 +12,17 @@
 #include"state.h"
 
 
+//单人游戏
+static void single_game_process();
 
-void game_main(){
+//多人游戏, 还不会网络API
+static void network_game_process();
+
+
+
+
+
+static void single_game_process(){
 
 
     std::shared_ptr<Rule> rule = std::make_shared<Rule>();
@@ -27,13 +36,9 @@ void game_main(){
     }
 }
 
-
-
-
-
-
-
-
+static void network_game_process(){
+    
+}
 
 
 #endif      // _MAHJONG_GAME_HEADER_

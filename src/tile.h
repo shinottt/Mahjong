@@ -20,7 +20,8 @@ public:
     bool is_green();            //是否绿牌：判断绿一色
 
     Tile()=default;
-
+    Tile(TileType type, bool is_red, TileState tile_state = TileState::_TSUMO)
+    :type_(type), is_red_(is_red), tile_state_(tile_state){}
 
     //不判断红宝
     bool operator==(const Tile& aim) const {
@@ -41,46 +42,44 @@ public:
         return false;
     }
 
-
 };
 
-
-bool Tile::is_wind(){
+inline bool Tile::is_wind(){
     if(type_ >= TileType::_1z && type_ <= TileType::_4z){
         return true;
     }
     return false;
 }
 
-bool Tile::is_sangen(){
+inline bool Tile::is_sangen(){
     if(type_ >= TileType::_5z && type_ <= TileType::_7z){
         return true;
     }
     return false;
 }
 
-bool Tile::is_19(){
+inline bool Tile::is_19(){
     if(type_ == TileType::_1m || type_ == TileType::_1p || type_ == TileType::_1s || type_ == TileType::_9m || type_ == TileType::_9p || type_ == TileType::_9s){
         return true;
     }
     return false;
 }
 
-bool Tile::is_tsu(){
+inline bool Tile::is_tsu(){
     if(is_wind() || is_sangen()){
         return true;
     }
     return false;
 }
 
-bool Tile::is_yaojiu(){
+inline bool Tile::is_yaojiu(){
     if(is_19() || is_tsu()){
         return true;
     }
     return false;
 }
 
-bool Tile::is_green(){
+inline bool Tile::is_green(){
     if(type_ == TileType::_6z || type_ == TileType::_2s || type_ == TileType::_3s || type_ == TileType::_4s || type_ == TileType::_6s || type_ == TileType::_8s){
         return true;
     }
@@ -100,9 +99,13 @@ public:
     BlockColor color_;   //block的颜色： 万，条，筒，风，三元
     int len_;           //block中牌的数量
     bool is_hand_;      //是否为手中的block
+    TenType ten_ = TenType::_NOTING;
 
     std::vector<Tile> tiles_;       //block中牌的集合
 
+
+    Block(BlockType type, BlockColor color, int len, bool is_hand, TenType ten = TenType::_NOTING)
+    :type_(type), color_(color), len_(len), is_hand_(is_hand), ten_(ten){}
 
 
     //完整的block才用下面的判断
@@ -169,24 +172,22 @@ public:
 
 };
 
-
-bool Block::is_wind(){
+inline bool Block::is_wind(){
     if(color_ == BlockColor::_WIND){return true;}
     return false;
 }
 
-bool Block::is_sangen(){
+inline bool Block::is_sangen(){
     if(color_ == BlockColor::_SANGEN){return true;}
     return false;
 }
 
-bool Block::is_19(){
+inline bool Block::is_19(){
     for(auto& temp_tile_ : tiles_){
         if(temp_tile_.is_19()){return true;}
     }
     return false;
 }
-
 
 
 #endif  // _MAHJONG_TILE_HEADER_

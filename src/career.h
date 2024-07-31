@@ -40,7 +40,7 @@ public:
 };
 
 
-void Career::read_from_file(){
+inline void Career::read_from_file(){
     std::fstream file_;
     file_.open(CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
     while(file_.peek() != EOF){
@@ -51,7 +51,7 @@ void Career::read_from_file(){
 }
 
 
-void Career::write_to_file(){
+inline void Career::write_to_file(){
     std::fstream file_;
     file_.open(CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
     file_.write((const char*)this, sizeof(*this));
