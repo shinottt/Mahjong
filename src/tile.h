@@ -20,6 +20,7 @@ public:
     bool is_green();            //是否绿牌：判断绿一色
 
     Tile()=default;
+    Tile(const Tile& aim):type_(aim.type_), is_red_(aim.is_red_), tile_state_(aim.tile_state_){}
     Tile(TileType type, bool is_red, TileState tile_state = TileState::_TSUMO)
     :type_(type), is_red_(is_red), tile_state_(tile_state){}
 
@@ -103,7 +104,8 @@ public:
 
     std::vector<Tile> tiles_;       //block中牌的集合
 
-
+    Block()=default;
+    Block(const Block& aim):type_(aim.type_), color_(aim.color_), len_(aim.len_), is_hand_(aim.is_hand_), ten_(aim.ten_), tiles_(aim.tiles_){}
     Block(BlockType type, BlockColor color, int len, bool is_hand, TenType ten = TenType::_NOTING)
     :type_(type), color_(color), len_(len), is_hand_(is_hand), ten_(ten){}
 
@@ -114,7 +116,15 @@ public:
     bool is_19();              //是否老头牌block: [123], [789], [111], [999]
 
 
-
+    bool operator=(const Block& aim){
+        type_ = aim.type_;
+        color_ = aim.color_;
+        len_ = aim.len_;
+        is_hand_ = aim.is_hand_;
+        ten_ = aim.ten_;
+        tiles_ = aim.tiles_;
+        return true;
+    }
 
 
     bool operator==(const Block& aim) const {
@@ -123,6 +133,7 @@ public:
         bool b = (color_ == aim.color_);
         bool c = (is_hand_ == aim.is_hand_);
         bool d = (tiles_[0].type_ == aim.tiles_[0].type_);
+        bool e = (ten_ == aim.ten_);
         return (a && b && c && d);
     }
 

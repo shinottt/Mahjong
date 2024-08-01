@@ -7,6 +7,7 @@
 
 #include"state.h"
 #include"tile.h"
+#include"sn_log.h"
 
 
 /*
@@ -25,6 +26,7 @@ public:
     int num_2 = 0;  //对
 
     Blocknum()=default;
+    Blocknum(const Blocknum& aim):num_3(aim.num_3), num_111(aim.num_111), num_2(aim.num_2){}
 
     void operator=(const Blocknum& aim){
         num_3 = aim.num_3;
@@ -46,6 +48,7 @@ public:
     int basic_point_;            //基本点数： 符×2^(番+2)
 
     Hu()=default;
+    Hu(const Hu& aim):type_(aim.type_), ten_(aim.ten_), yaku_(aim.yaku_), blocks_(aim.blocks_), man_(aim.man_), fu_(aim.fu_), fan_(aim.fan_), basic_point_(aim.basic_point_){}
     Hu(TileType& type, TenType& ten, std::vector<YakuType>& yaku, std::vector<Block>& blocks, ManType& man, int& fu, int& fan, int& basic_point)
     :type_(type), ten_(ten),yaku_(yaku), blocks_(blocks), man_(man), fu_(fu), fan_(fan), basic_point_(basic_point){}
 
@@ -58,6 +61,30 @@ public:
         fu_ = fu;
         fan_ = fan;
         basic_point_ = basic_point;
+    }
+
+    bool operator<(const Hu& aim){
+        if(type_ < aim.type_){
+            return true;
+        }else if(type_ > aim.type_){
+            return false;
+        } else{
+            if(basic_point_ < aim.basic_point_){
+                return true;
+            } else {return false;}
+        }
+    }
+
+    bool operator>(const Hu& aim){
+        if(type_ > aim.type_){
+            return true;
+        } else if(type_ < aim.type_){
+            return false;
+        } else{
+            if(basic_point_ > aim.basic_point_){
+                return true;
+            } else {return false;}
+        }
     }
 
 };
@@ -113,9 +140,14 @@ public:
 
     int cal_yaku(Hu&);    //使用 Player(class) 和 Hu(class) 中的数据计算番数和役：一般胡牌
 
+
+    //很乱
     void search_111_LtoR(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从左往右取[111]顺子放入block_temp_中
     void search_111_RtoL(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从右往左取[111]顺子放入block_temp_中
+    void search_111_LandR(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从左右两边取[111]顺子放入block_temp_中
+    void search_111_RandL(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);   //从右左两边取[111]顺子放入block_temp_中
     void search_3_all(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);  //取手中所有[3]
+    void search_2_aim(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_, int pos);
 
     //缺[2]的听牌型判断
     void hu_type_1(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_);
@@ -175,7 +207,67 @@ public:
     int is_shousuushi();    //小四喜
     int is_suukantsu();     //四杠子     
 
+
+
+
+
+
+    //测试打印函数
+    void print_hand_();
+    void print_ten_();
+    void print_hu_();
+
 };
+
+
+inline void Player::print_hand_(){
+    if(!hand_.empty()){
+        std::cout<<"hand tiles: ";
+        for(int i = 0; i < hand_.size(); ++i){
+            std::cout<<static_cast<int>(hand_[i].type_)<<" ";
+        }
+        std::cout<<std::endl;
+
+    }else{
+        sn_consolelog_info("No hand tiles");
+    }
+
+}
+
+
+inline void Player::print_ten_(){
+    if(!ten_.empty()){
+        for(int i = 0; i < ten_.size(); ++i){
+            std::cout << "ten block tiles: ";
+            for(int j = 0; j < ten_[i].size(); ++j){
+                for(int k = 0; k < ten_[i][j].tiles_.size(); ++k){
+                    std::cout << static_cast<int>(ten_[i][j].tiles_[k].type_) <<" ";
+                }
+            }
+            std::cout << std::endl;
+        }
+    }else{
+        sn_consolelog_info("No ten blocks");
+    }
+}
+
+inline void Player::print_hu_(){
+    if(!hu_.empty()){
+        for(int i = 0; i < hu_.size(); ++i){
+            std::cout<<"hu tile type: "<<static_cast<int>(hu_[i].type_)<<"  "<<"ten type: "<<static_cast<int>(hu_[i].ten_)<<std::endl;
+            std::cout<<"class hu tiles: ";
+            for(int j = 0; j < hu_[i].blocks_.size(); ++j){
+                for(int k = 0; k < hu_[i].blocks_[j].tiles_.size(); ++k){
+                    std::cout<<static_cast<int>(hu_[i].blocks_[j].tiles_[k].type_)<<" ";
+                }
+            }
+            std::cout<<std::endl;
+        }
+    }else{
+        sn_consolelog_info("No hu blocks");
+    }
+}
+
 
 
 

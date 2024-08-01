@@ -2,6 +2,10 @@
 
 void Player::hand_to_block(){
 
+    if(!ten_.empty()){ten_.clear();}
+    if(!hu_.empty()){hu_.clear();}
+    if(!shanten_.empty()){shanten_.clear();}
+
 
     //先将手牌转化为相关牌的数量
     int handnum_[34]{0};
@@ -27,11 +31,21 @@ void Player::hand_to_block(){
         }
     }
 
+
+    //特殊牌型
+    //七对子
+    //国士无双
+
+    //一般胡
     is_ten(hand_block_num_, handnum_);
 
 
+    //测试打印
+    std::sort(hu_.begin(), hu_.end());
 
-
+    print_hand_();
+    print_ten_();
+    print_hu_();
 
 }
 
@@ -46,17 +60,17 @@ void Player::is_ten(Blocknum& hand_block_num_, int* handnum_){
 
     std::vector<Block> block_list_;
     Blocknum temp_block_num_;
+    int m_[34]{0};
 
     //手牌数量备份
     temp_block_num_ = hand_block_num_;
-    int m_[34]{0};
     for(int i = 0; i < 34; ++i){
         m_[i] = handnum_[i];
     }
     //1.先取[111] (LtoR)，再取[3]
     search_111_LtoR(block_list_, temp_block_num_, m_);
     search_3_all(block_list_, temp_block_num_, m_);
-    hu_type_1(block_list_, hand_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
     if(!block_list_.empty()){block_list_.clear();}
 
 
@@ -67,36 +81,68 @@ void Player::is_ten(Blocknum& hand_block_num_, int* handnum_){
     }
     search_111_RtoL(block_list_, temp_block_num_, m_);
     search_3_all(block_list_, temp_block_num_, m_);
-    hu_type_1(block_list_, hand_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
     if(!block_list_.empty()){block_list_.clear();}
 
     //3.先左取[111]再右取[111] (LandR)，最后取[3]
-
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_111_LandR(block_list_, temp_block_num_, m_);
+    search_3_all(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
     //4.先右取[111]再左取[111] (RandL)，最后取[3]
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_111_RandL(block_list_, temp_block_num_, m_);
+    search_3_all(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
     //5.先取[3]，再从左往右取[111] (LtoR)
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_3_all(block_list_, temp_block_num_, m_);
+    search_111_LtoR(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
     //6.先取[3]，再从右往左取[111] (RtoL)
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_3_all(block_list_, temp_block_num_, m_);
+    search_111_RtoL(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
     //7.先取[3]，再先左后右取[111] (LandR)
-
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_3_all(block_list_, temp_block_num_, m_);
+    search_111_LandR(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
     //8.先取[3]，再先右后左取[111] (RandL)
-
-
-
-
+    temp_block_num_ = hand_block_num_;
+    for(int i = 0; i < 34; ++i){
+        m_[i] = handnum_[i];
+    }
+    search_3_all(block_list_, temp_block_num_, m_);
+    search_111_RandL(block_list_, temp_block_num_, m_);
+    hu_type_1(block_list_, temp_block_num_, m_);
+    if(!block_list_.empty()){block_list_.clear();}
 
 
     /*
@@ -114,31 +160,92 @@ void Player::is_ten(Blocknum& hand_block_num_, int* handnum_){
     for( int p = 0; p < pos_2_.size(); ++p){
 
         //1. [2], [111] (LtoR), [3]
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_111_LtoR(block_list_, temp_block_num_, m_);
+        search_3_all(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //2. [2], [111] (RtoL), [3]
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_111_RtoL(block_list_, temp_block_num_, m_);
+        search_3_all(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
    
         //3. [2], [111] (LandR), [3]
-
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_111_LandR(block_list_, temp_block_num_, m_);
+        search_3_all(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //4. [2], [111] (RandL), [3]
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_111_RandL(block_list_, temp_block_num_, m_);
+        search_3_all(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //5. [2], [3], [111] (LtoR)
-
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_3_all(block_list_, temp_block_num_, m_);
+        search_111_LtoR(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //6. [2], [3], [111] (RtoL)
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_3_all(block_list_, temp_block_num_, m_);
+        search_111_RtoL(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //7. [2], [3], [111] (LandR)
-
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_3_all(block_list_, temp_block_num_, m_);
+        search_111_LandR(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
 
         //8. [2], [3], [111] (RandL)
-   
-   
+        temp_block_num_ = hand_block_num_;
+        for(int i = 0; i < 34; ++i){
+            m_[i] = handnum_[i];
+        }
+        search_2_aim(block_list_, temp_block_num_, m_, pos_2_[p]);
+        search_3_all(block_list_, temp_block_num_, m_);
+        search_111_RandL(block_list_, temp_block_num_, m_);
+        hu_type_2(block_list_, temp_block_num_, m_);
+        if(!block_list_.empty()){block_list_.clear();}
     }
 }
 
@@ -654,7 +761,923 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
     }
 }
 
-void Player::search_3_all(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
+void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
+    //1. 取万
+    for(int i1 = 0, i2 = 8; i1 < 7 && i2 > 1; ++i1, --i2){
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 0){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 1){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 1){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 8){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 == 7){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 7){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+
+    //取筒
+    for(int i1 = 9, i2 = 17; i1 < 16 && i2 > 10; ++i1, --i2){
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 9){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 10){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 10){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 17){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 == 16){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 16){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);  
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+
+    //取条
+    for(int i1 = 18, i2 = 26; i1 < 25 && i2 > 19; ++i1, --i2){
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 18){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 19){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 19){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 26){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 == 25){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 25){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
+    //取万牌
+    for(int i1 = 0, i2 = 8; i1 < 7 && i2 > 1; ++i1, --i2){
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 8){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 == 7){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 7){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 0){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 1){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 1){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+
+    //取筒
+    for(int i1 = 9, i2 = 17; i1 < 16 && i2 > 10; ++i1, --i2){
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 17){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 == 16){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 16){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 9){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 10){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 10){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+
+    //取条
+    for(int i1 = 18, i2 = 26; i1 < 25 && i2 > 19; ++i1, --i2){
+        //取右
+        if(m_[i2] != 0){
+            if(i2 == 26){
+                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                } 
+            }
+            else if(i2 == 25){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i2 < 25){
+                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
+                    m_[i2]--;
+                    m_[i2-1]--;
+                    m_[i2-2]--;
+                    block_num_.num_111++;                    
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2-2);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                    m_[i2]--;
+                    m_[i2+1]--;
+                    m_[i2+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i2] != 0){
+                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
+                        m_[i2]--;
+                        m_[i2+1]--;
+                        m_[i2+2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        take_111(temp, i2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+        //取左
+        if(m_[i1] != 0){
+            if(i1 == 18){
+                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 == 19){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+            }
+            else if(i1 > 19){
+                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1+1]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
+                    m_[i1]--;
+                    m_[i1+1]--;
+                    m_[i1+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1);
+                    block_temp_.emplace_back(temp);
+                }
+                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                    m_[i1]--;
+                    m_[i1-1]--;
+                    m_[i1-2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    take_111(temp, i1-2);
+                    block_temp_.emplace_back(temp);
+                }
+                if(m_[i1] != 0){
+                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
+                        m_[i1]--;
+                        m_[i1-1]--;
+                        m_[i1-2]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        take_111(temp, i1-2);
+                        block_temp_.emplace_back(temp);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Player::search_3_all(std::vector<Block>& block_temp_, Blocknum& block_num_, int *m_){
     for(int i =0; i<34; ++i){
         if(m_[i] >= 3){
             m_[i] -= 3;
@@ -666,8 +1689,19 @@ void Player::search_3_all(std::vector<Block> &block_temp_, Blocknum &block_num_,
     }
 }
 
-void Player::hu_type_1(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
+void Player::search_2_aim(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_, int pos){
+    if(m_[pos] >= 2){
+        block_num_.num_2++;
+        m_[pos] -= 2;
+        Block temp(BlockType::_TOITSU, TileTypeToBlockColor(static_cast<TileType>(pos)),2, true);
+        take_2(temp, pos);
+        block_temp_.emplace_back(temp);
+    }
+}
+
+void Player::hu_type_1(std::vector<Block>& block_temp_, Blocknum& block_num_, int* m_){
     if(block_num_.num_111 + block_num_.num_3 == 4){
+        Hu hu_temp_;
         for(int i = 0; i < 34; ++i){
             if(m_[i] != 0){
                 m_[i]--;
@@ -677,13 +1711,19 @@ void Player::hu_type_1(std::vector<Block> &block_temp_, Blocknum &block_num_, in
                 //把听的那张牌也放进去
                 Tile ting_tile_(IndexToTileType(i),false);
                 temp.tiles_.emplace_back(ting_tile_);
+                std::sort(temp.tiles_.begin(), temp.tiles_.end());
                 block_temp_.emplace_back(temp);
+                hu_temp_.type_ = IndexToTileType(i);
+                hu_temp_.ten_ = TenType::_TANKI;
+                hu_temp_.blocks_ = block_temp_;
+
             }
         }
 
         std::sort(block_temp_.begin(), block_temp_.end());      //排序
         if(this->ten_.empty()){
             ten_.emplace_back(block_temp_);
+            hu_.emplace_back(hu_temp_);
         } else{
             //判断是否有重复的听牌型
             bool is_same = true;
@@ -700,11 +1740,174 @@ void Player::hu_type_1(std::vector<Block> &block_temp_, Blocknum &block_num_, in
             if(is_same){block_temp_.clear();}
             else{
                 ten_.emplace_back(block_temp_);
+                hu_.emplace_back(hu_temp_);
             }
         }
     } else {
         //向听数
     }
+}
+
+void Player::hu_type_2(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
+    if(block_num_.num_111 + block_num_.num_3 + block_num_.num_2 == 4){
+        //剩下的是不是[2]
+        Hu hu_temp_;
+        //两面听牌的情况
+        Hu hu_temp2_;
+        std::vector<Block> block_temp2_ = block_temp_;
+        bool ting_2 = false;
+        for(int i = 0; i < 34; ++i){
+            if(m_[i] == 2){
+                ting_2 = true;
+                m_[i] -= 2;
+                block_num_.num_3++;
+                Block temp(BlockType::_KOUTSU, TileTypeToBlockColor(static_cast<TileType>(i)),3,true, TenType::_SHANPON);
+                take_2(temp, i);
+                Tile ting_tile_(IndexToTileType(i),false);
+                temp.tiles_.emplace_back(ting_tile_);
+                std::sort(temp.tiles_.begin(), temp.tiles_.end());
+                block_temp_.emplace_back(temp);
+                hu_temp_.type_ = IndexToTileType(i);
+                hu_temp_.ten_ = TenType::_SHANPON;
+                hu_temp_.blocks_ = block_temp_;
+                block_temp2_.clear();
+            }
+        }
+        //剩下的是[11]或是[1_1]
+        bool ting_11 = false;
+        bool ting_1_1 = false;
+        for(int i = 0; i < 34; ++i){
+            if(m_[i] != 0){
+                if(m_[i+1] == 1 && (i/9) == (i+1)/9){
+                    if(i%9 == 0){
+                        ting_11 = true;
+                        m_[i]--;
+                        m_[i+1]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, TileTypeToBlockColor(static_cast<TileType>(i)),3,true, TenType::_PENCHAN);
+                        take_11(temp, i);
+                        Tile ting_tile_(IndexToTileType(i+2),false);
+                        temp.tiles_.emplace_back(ting_tile_);
+                        std::sort(temp.tiles_.begin(), temp.tiles_.end());
+                        block_temp_.emplace_back(temp);
+                        hu_temp_.type_ = IndexToTileType(i+2);
+                        hu_temp_.ten_ = TenType::_PENCHAN;
+                        hu_temp_.blocks_ = block_temp_;
+                        block_temp2_.clear();
+                    } else if(i%9 == 7){
+                        ting_11 = true;
+                        m_[i]--;
+                        m_[i+1]--;
+                        block_num_.num_111++;
+                        Block temp(BlockType::_SHUNTSU, TileTypeToBlockColor(static_cast<TileType>(i)),3,true, TenType::_PENCHAN);
+                        take_11(temp, i);
+                        Tile ting_tile_(IndexToTileType(i-1),false);
+                        temp.tiles_.emplace_back(ting_tile_);
+                        std::sort(temp.tiles_.begin(), temp.tiles_.end());
+                        block_temp_.emplace_back(temp);
+                        hu_temp_.type_ = IndexToTileType(i-1);
+                        hu_temp_.ten_ = TenType::_PENCHAN;
+                        hu_temp_.blocks_ = block_temp_;
+                        block_temp2_.clear();
+                    } else{
+                        ting_11 = true;
+                        m_[i]--;
+                        m_[i+1]--;
+                        block_num_.num_111++;
+                        Block temp1(BlockType::_SHUNTSU, TileTypeToBlockColor(static_cast<TileType>(i)),3,true, TenType::_RYANMEN);
+                        take_11(temp1, i);
+                        Block temp2 = temp1;
+                        Tile ting_tile1_(IndexToTileType(i-1), false);
+                        Tile ting_tile2_(IndexToTileType(i+2),false);
+                        temp1.tiles_.emplace_back(ting_tile1_);
+                        temp2.tiles_.emplace_back(ting_tile2_);
+                        std::sort(temp1.tiles_.begin(), temp1.tiles_.end());
+                        std::sort(temp2.tiles_.begin(), temp2.tiles_.end());
+                        block_temp_.emplace_back(temp1);
+                        block_temp2_.emplace_back(temp2);
+                        hu_temp_.type_ = IndexToTileType(i-1);
+                        hu_temp_.ten_ = TenType::_RYANMEN;
+                        hu_temp_.blocks_ = block_temp_;
+                        hu_temp2_.type_ = IndexToTileType(i+2);
+                        hu_temp2_.ten_ = TenType::_RYANMEN;
+                        hu_temp2_.blocks_ = block_temp2_;
+                    }
+                    
+                }
+                else if(m_[i+2] == 1 && (i/9) == (i+2)/9){
+                    ting_1_1 = true;
+                    m_[i]--;
+                    m_[i+2]--;
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, TileTypeToBlockColor(static_cast<TileType>(i)),3,true, TenType::_KANCHAN);
+                    take_1_1(temp, i);
+                    Tile ting_tile_(IndexToTileType(i+1),false);
+                    temp.tiles_.emplace_back(ting_tile_);
+                    std::sort(temp.tiles_.begin(), temp.tiles_.end());
+                    block_temp_.emplace_back(temp);
+                    hu_temp_.type_ = IndexToTileType(i+1);
+                    hu_temp_.ten_ = TenType::_KANCHAN;
+                    hu_temp_.blocks_ = block_temp_;
+                }
+            }
+        }
+        bool ting_ = ting_2 || ting_11 || ting_1_1;
+
+        if(ting_){
+            std::sort(block_temp_.begin(), block_temp_.end());
+            if(ten_.empty()){
+                ten_.emplace_back(block_temp_);
+                if(!block_temp2_.empty()){
+                    ten_.emplace_back(block_temp2_);
+                }
+            }
+            else {
+                //判断是否有重复的听牌型
+                bool is_same = true;
+                for(int i = 0; i < ten_.size(); ++i){
+                    is_same = true;
+                    for(int j = 0; j < ten_[i].size(); ++j){
+                        if(block_temp_[j] != ten_[i][j]){
+                            is_same = false;
+                            break;
+                        }
+                    }
+                    if(is_same){break;}
+                }
+                if(is_same){block_temp_.clear();}
+                else{
+                    ten_.emplace_back(block_temp_);
+                    hu_.emplace_back(hu_temp_);
+                }
+                if(!block_temp2_.empty()){
+                    std::sort(block_temp2_.begin(), block_temp2_.end());
+                    bool is_same2 = true;
+                    for(int i = 0; i < ten_.size(); ++i){
+                        is_same2 = true;
+                        for(int j = 0; j < ten_[i].size(); ++j){
+                            if(block_temp2_[j] != ten_[i][j]){
+                                is_same2 = false;
+                                break;
+                            }
+                        }
+                        if(is_same2){break;}
+                    }
+                    if(is_same2){block_temp2_.clear();}
+                    else{
+                        ten_.emplace_back(block_temp2_);
+                        hu_.emplace_back(hu_temp2_);
+                    }
+                }
+            }
+        }
+
+    }
+    else{
+        //向听数
+
+    }
+
+
 }
 
 void Player::take_111(Block& block, int t1){
@@ -746,6 +1949,18 @@ void Player::take_3(Block &block, int t1){
     }
 }
 
+void Player::take_2(Block &block, int t1){
+    int t1_num = 0;
+    for(int i = 0; i < hand_.size(); ++i){
+        if(t1_num < 2){
+            if(static_cast<int>(hand_[i].type_) == t1){
+                block.tiles_.emplace_back(hand_[i]);
+                t1_num++;
+            }
+        }
+    }
+}
+
 void Player::take_1(Block &block, int t1){
     int t1_num = 0;
     for(int i = 0; i < hand_.size(); ++i){
@@ -756,6 +1971,47 @@ void Player::take_1(Block &block, int t1){
             }
         }
     }
+}
+
+void Player::take_11(Block &block, int t1){
+    int t1_num = 0;
+    int t2_num = 0;
+    for(int i = 0; i < hand_.size(); ++i){
+        if(t1_num == 0){
+            if(static_cast<int>(hand_[i].type_) == t1){
+                block.tiles_.emplace_back(hand_[i]);
+                t1_num++;
+            }
+        }
+        if(t2_num == 0){
+            if(static_cast<int>(hand_[i].type_) == t1+1){
+                block.tiles_.emplace_back(hand_[i]);
+                t2_num++;
+            }
+        }
+    }
+    std::sort(block.tiles_.begin(), block.tiles_.end());
+
+}
+
+void Player::take_1_1(Block &block, int t1){
+    int t1_num = 0;
+    int t2_num = 0;
+    for(int i = 0; i < hand_.size(); ++i){
+        if(t1_num == 0){
+            if(static_cast<int>(hand_[i].type_) == t1){
+                block.tiles_.emplace_back(hand_[i]);
+                t1_num++;
+            }
+        }
+        if(t2_num == 0){
+            if(static_cast<int>(hand_[i].type_) == t1+2){
+                block.tiles_.emplace_back(hand_[i]);
+                t2_num++;
+            }
+        }
+    }
+    std::sort(block.tiles_.begin(), block.tiles_.end());
 }
 
 int Player::is_riichi(){
