@@ -12,16 +12,16 @@
 #include"state.h"
 
 //单人游戏
-static void single_game_process();
+void single_game_process();
 
 //多人游戏, 还不会网络API
-static void network_game_process();
+void network_game_process();
 
 
 
 
 
-static void single_game_process(){
+void single_game_process(){
 
 
     std::shared_ptr<Rule> rule = std::make_shared<Rule>();
@@ -35,7 +35,7 @@ static void single_game_process(){
     }
 }
 
-static void network_game_process(){
+void network_game_process(){
     
 }
 

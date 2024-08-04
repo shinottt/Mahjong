@@ -2,8 +2,6 @@
 #define _MAHJONG_ENUMS_HEADER_
 
 
-#include"sn_log.h"
-
 
 enum TileType: int {
     _1m, _2m, _3m, _4m, _5m, _6m, _7m, _8m, _9m,
@@ -183,7 +181,7 @@ static TileType IndexToTileType(int index_){
                 default:break;
             }
         default:
-            sn_consolelog_debug("function IndexToTileType debug: invalid index\n");
+            printf("function IndexToTileType debug: invalid index\n");
             exit(1);
             break;
     }

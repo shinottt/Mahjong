@@ -4,6 +4,7 @@
 
 #include<memory>
 #include<algorithm>
+#include<iostream>
 
 #include"state.h"
 #include"tile.h"
@@ -94,7 +95,7 @@ public:
     CharacterId id_;
 
     
-    bool isFuriten_ = false;        //振听
+    bool is_furiten_ = false;        //振听
     bool is_riichi_ = false;
     bool is_double_riichi_ = false;
     bool is_tenpai_ = false;        //听牌
@@ -186,7 +187,7 @@ public:
     int is_sanankou();         //三暗刻(2), 四暗刻(13), 四暗刻单骑(26)
     int is_shousangen();       //小三元(2), 大三元(13)
     int is_honroutou();        //混老头
-    int is_chitoitsu();        //七对子，特殊牌型，取block前判断
+    int is_chitoitsu(int* _handnum);        //七对子，特殊牌型，取block前判断
 
     int is_chantaiyao();       //混全副露(1), 混全门清(2), 和纯全分开
    

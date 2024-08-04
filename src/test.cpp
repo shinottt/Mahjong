@@ -6,7 +6,6 @@
 #include"state.h"
 #include"tile.h"
 #include"game.h"
-#include"sn_log.h"
 
 Tile m1(TileType::_1m, false);
 Tile m2(TileType::_2m,false);
@@ -46,18 +45,19 @@ Tile z5(TileType::_5z, false);
 Tile z6(TileType::_6z, false);
 Tile z7(TileType::_7z, false);
 
-const int num1 = 1;
+const int num1 = 2;
 const int num2 = 13;
 
-Tile TestLists[1][13]{
-{m1,m1,m1,m2,m3,m4,m5,m6,m7,m8,m9,m9,m9}
+Tile TestLists[num1][num2]{
+{m1,m1,m1,m2,m3,m4,m5,m6,m7,m8,m9,m9,m9},       //九莲
+{m1,m1,m3,m3,m5,m5,m7,m7,p1,p1,p3,p3,z5}        //七对
 };
 
 
 
 
 int main(){
-    printf("[ Main Start ]");
+    printf("[ Main Start ]\n");
 
 
     std::shared_ptr<State> TestState = std::make_shared<State>();
@@ -76,7 +76,7 @@ int main(){
 
 
 
-    printf("[ Main End ]");
+    printf("[ Main End ]\n");
 
     return 0;
 }

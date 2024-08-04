@@ -34,7 +34,10 @@ void Player::hand_to_block(){
 
     //特殊牌型
     //七对子
+    is_chitoitsu(handnum_);
+    
     //国士无双
+
 
     //一般胡
     is_ten(hand_block_num_, handnum_);
@@ -2046,10 +2049,54 @@ int Player::is_rinshankaihou(){
     return 0;
 }
 
+int Player::is_chitoitsu(int* _handnum){
+    if(!is_menzen_){return 0;}
+    std::vector<int> _pos_2;
+    std::vector<int> _pos_1;
+    int _m[34]{0};
+    for(int i = 0; i < 34; ++i){
+        _m[i] = _handnum[i];
+    }
+    Hu _hu_temp;
+    for(int i = 0; i < 34; ++i){
+        if(_m[i] == 2){
+            _pos_2.emplace_back(i);
+        }
+        if(_m[i] == 1){
+            _pos_1.emplace_back(i);
+        }
+    }
+    if(_pos_2.size() == 6 && _pos_1.size() == 1){
+        std::vector<Block> _block_temp;
+        for(int i = 0; i < _pos_2.size(); ++i){
+            Block _temp(BlockType::_TOITSU, TileTypeToBlockColor(static_cast<TileType>(_pos_2[i])), 2, true);
+            take_2(_temp, _pos_2[i]);
+            _m[_pos_2[i]] -= 2;
+            _block_temp.emplace_back(_temp);
+        }
+        for(int i = 0; i < _pos_1.size(); ++i){
+            _m[_pos_1[i]] -= 1;
+            Block _temp(BlockType::_TOITSU, TileTypeToBlockColor(static_cast<TileType>(_pos_1[i])), 1, true);
+            take_1(_temp, _pos_1[i]);
+            Tile _ting_tile(IndexToTileType(_pos_1[i]), false);
+            _temp.tiles_.emplace_back(_ting_tile);
+            std::sort(_temp.tiles_.begin(), _temp.tiles_.end());
+            _block_temp.emplace_back(_temp);
+            _hu_temp.type_ = IndexToTileType(_pos_1[i]);
+        }
+        _hu_temp.ten_ = TenType::_TANKI;
+        _hu_temp.yaku_.emplace_back(YakuType::_CHITOITSU);
+        _hu_temp.fu_ = 25;
+        _hu_temp.blocks_ = _block_temp;
+        std::sort(_block_temp.begin(), _block_temp.end());
+        ten_.emplace_back(_block_temp);
+        hu_.emplace_back(_hu_temp);
+    }
+    return 0;
+}
 
-
-
-int Player::is_chantaiyao(){
+int Player::is_chantaiyao()
+{
     bool z_tile_ = false;   //字牌，无字牌return 0
     for(auto& temp_tile_ : hand_){
         if(!temp_tile_.is_19() || !temp_tile_.is_tsu()){return 0;}
@@ -2068,9 +2115,6 @@ int Player::is_chantaiyao(){
     if(z_tile_){return 1;}
     return 0;
 }
-
-
-
 
 int Player::is_junchantaiyao(){
     for(auto& temp_tile_ : hand_){
