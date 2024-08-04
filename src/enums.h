@@ -121,7 +121,7 @@ static BlockColor TileTypeToBlockColor(TileType type_){
             if(t >= 0 && t <= 3){return BlockColor::_WIND;break;}
             else if(t >= 4 && t <= 6){return BlockColor::_SANGEN;break;}
         default:
-            sn_consolelog_debug("function TileTypeToBlockColor debug: invalid tile type");
+            printf("function TileTypeToBlockColor debug: invalid tile type");
             exit(1);
             break;
     }
@@ -183,7 +183,7 @@ static TileType IndexToTileType(int index_){
                 default:break;
             }
         default:
-            sn_consolelog_debug("function IndexToTileType debug: invalid index");
+            sn_consolelog_debug("function IndexToTileType debug: invalid index\n");
             exit(1);
             break;
     }

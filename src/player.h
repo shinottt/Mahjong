@@ -7,8 +7,6 @@
 
 #include"state.h"
 #include"tile.h"
-#include"sn_log.h"
-
 
 /*
 
@@ -229,7 +227,7 @@ inline void Player::print_hand_(){
         std::cout<<std::endl;
 
     }else{
-        sn_consolelog_info("No hand tiles");
+        printf("No hand tiles");
     }
 
 }
@@ -247,7 +245,7 @@ inline void Player::print_ten_(){
             std::cout << std::endl;
         }
     }else{
-        sn_consolelog_info("No ten blocks");
+        printf("No ten blocks");
     }
 }
 
@@ -264,7 +262,7 @@ inline void Player::print_hu_(){
             std::cout<<std::endl;
         }
     }else{
-        sn_consolelog_info("No hu blocks");
+        printf("No hu blocks");
     }
 }
 

@@ -11,7 +11,6 @@
 
 #include"state.h"
 
-
 //单人游戏
 static void single_game_process();
 

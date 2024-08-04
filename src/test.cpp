@@ -8,7 +8,6 @@
 #include"game.h"
 #include"sn_log.h"
 
-
 Tile m1(TileType::_1m, false);
 Tile m2(TileType::_2m,false);
 Tile m3(TileType::_3m,false);
@@ -58,7 +57,7 @@ Tile TestLists[1][13]{
 
 
 int main(){
-    sn_consolelog_debug("main function start");
+    printf("[ Main Start ]");
 
 
     std::shared_ptr<State> TestState = std::make_shared<State>();
@@ -75,8 +74,9 @@ int main(){
         TestPlayer.hand_.clear();
     }
 
-    
-    sn_consolelog_debug("main function end");
+
+
+    printf("[ Main End ]");
 
     return 0;
 }

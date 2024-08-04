@@ -4,9 +4,6 @@
 #include<string>
 #include<fstream>
 
-
-#include"sn_log.h"
-
 const std::string CAREER_FILE_PATH = "career.dat";
 
 
@@ -47,7 +44,7 @@ inline void Career::read_from_file(){
         file_.read((char*)this, sizeof(*this));
     }
     file_.close();
-    sn_consolelog_info("career data read from file: {}", CAREER_FILE_PATH);
+    printf("career data read from file: %s\n", CAREER_FILE_PATH.c_str());
 }
 
 
@@ -56,7 +53,7 @@ inline void Career::write_to_file(){
     file_.open(CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
     file_.write((const char*)this, sizeof(*this));
     file_.close();
-    sn_consolelog_info("career data write to file: {}", CAREER_FILE_PATH);
+    printf("career data write to file: %s\n", CAREER_FILE_PATH.c_str());
 }
 
 

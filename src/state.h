@@ -43,7 +43,7 @@ public:
             file_.read((char*)this, sizeof(*this));
         }
         file_.close();
-        sn_consolelog_info("default rule loaded from file: {}", RULE_DEFAULT_FILE_PATH);
+        printf("default rule load from file: %s\n", RULE_DEFAULT_FILE_PATH.c_str());
     }
 
     //读取玩家的规则设置
@@ -54,7 +54,7 @@ public:
             file_.read((char*)this, sizeof(*this));
         }
         file_.close();
-        sn_consolelog_info("rule loaded from file: {}", RULE_FILE_PATH);
+        printf("rule loaded from file: %s\n", RULE_FILE_PATH.c_str());
     }
 
     void save_rule(){
@@ -62,7 +62,7 @@ public:
         file_.open(RULE_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
         file_.write((const char*)this, sizeof(*this));
         file_.close();
-        sn_consolelog_info("rule saved to file: {}", RULE_FILE_PATH);
+        printf("rule saved to file: %s\n", RULE_FILE_PATH.c_str());
     }
 
 
