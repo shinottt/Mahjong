@@ -202,7 +202,7 @@ public:
     int is_chiihou();   //地胡
     int is_ryuuiisou(); //绿一色
     int is_chinroutou();    //清老头
-    int is_kokushimusou();  //国士无双(13)，国士无双13面(26), 特殊牌型要先判断
+    int is_kokushimusou(int* _handnum);  //国士无双(13)，国士无双13面(26), 特殊牌型要先判断
     int is_shousuushi();    //小四喜
     int is_suukantsu();     //四杠子     
 
@@ -228,7 +228,7 @@ inline void Player::print_hand_(){
         std::cout<<std::endl;
 
     }else{
-        printf("No hand tiles");
+        printf("No hand tiles\n");
     }
 
 }
@@ -246,7 +246,7 @@ inline void Player::print_ten_(){
             std::cout << std::endl;
         }
     }else{
-        printf("No ten blocks");
+        printf("No ten blocks\n");
     }
 }
 
@@ -263,7 +263,7 @@ inline void Player::print_hu_(){
             std::cout<<std::endl;
         }
     }else{
-        printf("No hu blocks");
+        printf("No hu blocks\n");
     }
 }
 

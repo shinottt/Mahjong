@@ -37,6 +37,7 @@ void Player::hand_to_block(){
     is_chitoitsu(handnum_);
     
     //国士无双
+    is_kokushimusou(handnum_);
 
 
     //一般胡
@@ -2129,3 +2130,85 @@ int Player::is_junchantaiyao(){
     return 2;
 }
 
+int Player::is_kokushimusou(int *_handnum){
+    if(!is_menzen_ || hand_.size() != 13){return 0;}
+    int _m[34]{0};
+    for(int i = 0; i < 34; ++i){
+        _m[i] = _handnum[i];
+    }
+    int _t_index[13]{0,8,9,17,18,26,27,28,29,30,31,32,33};
+    int _t_num[13]{0};
+    for(int i = 0; i < 34; ++i){
+        if(_m[i] != 0){
+            switch(i){
+                case 0: _t_num[0] = 1; break;
+                case 8: _t_num[1] = 1; break;
+                case 9: _t_num[2] = 1; break;
+                case 17: _t_num[3] = 1; break;
+                case 18: _t_num[4] = 1; break;
+                case 26: _t_num[5] = 1; break;
+                case 27: _t_num[6] = 1; break;
+                case 28: _t_num[7] = 1; break;
+                case 29: _t_num[8] = 1; break;
+                case 30: _t_num[9] = 1; break;
+                case 31: _t_num[10] = 1; break;
+                case 32: _t_num[11] = 1; break;
+                case 33: _t_num[12] = 1; break;
+                default: return 0; break;
+            }
+        }
+    }
+    int _t_sum = 0;
+    for(int i = 0; i < 13; ++i){
+        _t_sum += _t_num[i];
+    }
+    printf("____________________________t_sum = %d\n", _t_sum);
+    if(_t_sum == 12){
+        //普通
+        Hu _hu_temp;
+        _hu_temp.man_ = ManType::_YAKUMAN;
+        _hu_temp.fu_ = 25;
+        _hu_temp.fan_ = 13;
+        _hu_temp.basic_point_ = 8000;
+        _hu_temp.ten_ = TenType::_TANKI;
+        std::vector<Block> _block_temp;
+        _hu_temp.yaku_.emplace_back(YakuType::_KOKUSHIMUSOU);
+        for(int i = 0; i < hand_.size(); ++i){
+            Block _temp(BlockType::_INCOMPLETED, TileTypeToBlockColor(static_cast<TileType>(_t_index[i])), 1, true);
+            _temp.tiles_.emplace_back(hand_[i]);
+            _block_temp.emplace_back(_temp);
+        }
+        for(int i = 0; i < 13; ++i){
+            if(_t_num[i] == 0){
+                _hu_temp.type_ = IndexToTileType(_t_index[i]);
+            }
+
+        }
+        std::sort(_block_temp.begin(), _block_temp.end());
+        _hu_temp.blocks_ = _block_temp;
+        hu_.emplace_back(_hu_temp);
+        ten_.emplace_back(_block_temp);
+    }
+    if(_t_sum == 13){
+        //13面
+        Hu _hu_temp_13;
+        _hu_temp_13.man_ = ManType::_YAKUMAN;
+        _hu_temp_13.fu_ = 25;
+        _hu_temp_13.fan_ = 13;
+        _hu_temp_13.basic_point_ = 8000;
+        _hu_temp_13.ten_ = TenType::_TANKI;
+        _hu_temp_13.yaku_.emplace_back(YakuType::_KOKUSHIMUSOU);
+        for(int i = 0; i < 13; ++i){
+            Block _temp(BlockType::_INCOMPLETED, TileTypeToBlockColor(static_cast<TileType>(_t_index[i])), 1, true);
+            Tile _tile(IndexToTileType(_t_index[i]), false);
+            _temp.tiles_.emplace_back(_tile);
+            _hu_temp_13.blocks_.emplace_back(_temp);
+
+        }
+        ten_.emplace_back(_hu_temp_13.blocks_);
+        for(int i = 0; i < 13; ++i){
+            _hu_temp_13.type_ = IndexToTileType(_t_index[i]);
+            hu_.emplace_back(_hu_temp_13);
+        }
+    }
+}

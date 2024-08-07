@@ -39,7 +39,7 @@ public:
     void set_default(){
         std::fstream file_;
         file_.open(RULE_DEFAULT_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
-        while(!file_.peek() != EOF){
+        while(file_.peek() != EOF){
             file_.read((char*)this, sizeof(*this));
         }
         file_.close();
