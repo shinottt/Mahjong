@@ -45,21 +45,26 @@ Tile z5(TileType::_5z, false);
 Tile z6(TileType::_6z, false);
 Tile z7(TileType::_7z, false);
 
-const int num1 = 4;
+const int num1 = 5;
 const int num2 = 13;
 
 Tile TestLists[num1][num2]{
 {m1,m1,m1,m2,m3,m4,m5,m6,m7,m8,m9,m9,m9},       //九莲
 {m1,m1,m3,m3,m5,m5,m7,m7,p1,p1,p3,p3,z5},        //七对
 {m1,m1,m9,p1,p9,s1,s9,z1,z2,z3,z4,z5,z6},        //国士
-{m1,m9,p1,p9,s1,s9,z1,z2,z3,z4,z5,z6,z7}        //国士13面
+{m1,m9,p1,p9,s1,s9,z1,z2,z3,z4,z5,z6,z7},        //国士13面
+{s2,s2,s3,s3,s4,s4,s6,s6,s6,s8,s8,s8,z6}        //绿一色
 };
-
-
 
 
 int main(){
     printf("[ Main Start ]\n");
+
+
+    Career career_single;
+    career_single.read_from_file_single();
+    Career career_net;
+    career_net.read_from_file_net();
 
 
     std::shared_ptr<State> TestState = std::make_shared<State>();

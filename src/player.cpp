@@ -44,6 +44,17 @@ void Player::hand_to_block(){
     is_ten(hand_block_num_, handnum_);
 
 
+
+    //根据hu_算分
+    if(!hu_.empty()){
+        for(int i = 0; i < hu_.size(); ++i){
+            //Todo
+        }
+    }
+
+
+
+
     //测试打印
     std::sort(hu_.begin(), hu_.end());
 
@@ -258,54 +269,68 @@ void Player::is_ten(Blocknum& hand_block_num_, int* handnum_){
 
 
 
-int Player::cal_yaku(Hu &cal_hu_)
+int Player::cal_yaku(Hu &_cal_hu)
 {
-    int fan = 0;
-    int f = 0;
+    int _fan = 0;
+    int _f = 0;
 
-    f = is_riichi();
-    if(f != 0){
-        fan += f;
-        if(f == 1){cal_hu_.yaku_.push_back(YakuType::_RIICHI);}
-        if(f == 2){cal_hu_.yaku_.push_back(YakuType::_DOUBLERIICHI);}
+    _f = is_riichi();
+    if(_f != 0){
+        _fan += _f;
+        if(_f == 1){_cal_hu.yaku_.emplace_back(YakuType::_RIICHI);}
+        if(_f == 2){_cal_hu.yaku_.emplace_back(YakuType::_DOUBLERIICHI);}
     }
-    f = is_tanyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_TANYAO);
+    _f = is_tanyao();
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_TANYAO);
     }
-    f = is_menzentsumo();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_MENZENTSUMO);
+    _f = is_menzentsumo();
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_MENZENTSUMO);
+    }
+
+
+
+    _f = is_yakuhai_sangen(_cal_hu);
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_YAKUHAISANGEN);
     }
 
 
     
-    f = is_rinshankaihou();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_RINSHANKAIHOU);
-    }
-
-    
-    
-    f = is_chantaiyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_CHANTAIYAO);
-    }
-    
-
-
-    f = is_junchantaiyao();
-    if(f != 0){
-        fan += f;
-        cal_hu_.yaku_.push_back(YakuType::_JUNCHANTAIYAO);
+    _f = is_rinshankaihou();
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_RINSHANKAIHOU);
     }
 
     
     
+    _f = is_chantaiyao();
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_CHANTAIYAO);
+    }
+    
+
+
+    _f = is_junchantaiyao();
+    if(_f != 0){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_JUNCHANTAIYAO);
+    }
+
+    
+    
+    
+    _f = is_ryuuiisou();
+    if(_f == 13){
+        _fan += _f;
+        _cal_hu.yaku_.emplace_back(YakuType::_RYUUIISOU);
+    }
     
     
     
@@ -314,8 +339,9 @@ int Player::cal_yaku(Hu &cal_hu_)
     
     
     
-    
-    return fan;
+    _cal_hu.fan_ = _fan;
+
+    return 0;
 }
 
 void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
@@ -2039,11 +2065,15 @@ int Player::is_menzentsumo(){
     return 0;
 }
 
-
-
-
-
-
+int Player::is_yakuhai_sangen(Hu& _hu){
+    int _sangen_num = 0;
+    for(auto& _temp_block : _hu.blocks_){
+        if(_temp_block.is_sangen()){
+            _sangen_num++;
+        }
+    }
+    return _sangen_num;
+}
 
 int Player::is_rinshankaihou(){
     if(next_tile_.tile_state_ == TileState::_KAN){return 1;}
@@ -2130,7 +2160,18 @@ int Player::is_junchantaiyao(){
     return 2;
 }
 
-int Player::is_kokushimusou(int *_handnum){
+int Player::is_ryuuiisou(){
+    for(auto& temp : hand_){
+        if(!temp.is_green()){return 0;}
+    }
+    for(auto& temp : fixed_tiles_){
+        if(!temp.is_green()){return 0;}
+    }
+    return 13;
+}
+
+int Player::is_kokushimusou(int *_handnum)
+{
     if(!is_menzen_ || hand_.size() != 13){return 0;}
     int _m[34]{0};
     for(int i = 0; i < 34; ++i){
@@ -2162,7 +2203,6 @@ int Player::is_kokushimusou(int *_handnum){
     for(int i = 0; i < 13; ++i){
         _t_sum += _t_num[i];
     }
-    printf("____________________________t_sum = %d\n", _t_sum);
     if(_t_sum == 12){
         //普通
         Hu _hu_temp;

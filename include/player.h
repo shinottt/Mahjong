@@ -137,7 +137,7 @@ public:
     void is_ten(Blocknum& hand_block_num_, int* handnum_);
 
 
-    int cal_yaku(Hu&);    //使用 Player(class) 和 Hu(class) 中的数据计算番数和役：一般胡牌
+    int cal_yaku(Hu&);    //使用 Player(class) 和 Hu(class) 中的数据计算番数、符数和役：一般胡牌
 
 
     //很乱
@@ -169,17 +169,17 @@ public:
     int is_menzentsumo();    //门前清自摸，与暗杠岭上开花不复合
     int is_yakuhai_selfwind();  //自风
     int is_yakuhai_tablewind(); //场风
-    int is_yakuhai_sangen();    //三元牌
+    int is_yakuhai_sangen(Hu& _hu);    //三元牌
     int is_pinfu(); //平胡
     int is_iipeikou();      //一盃口(1), 二盃口(3)
     int is_chankan();   //抢杠
     int is_rinshankaihou(); //岭上开花         
     int is_haiteiraoyue();  //海底捞月
     int is_houteiraoyui();  //河底捞鱼
-    int is_ippatsu();       //一发
+    //int is_ippatsu();       //一发
     int is_dora();          //宝牌
-    int is_uradora();       //里宝
-    int is_akadora();       //红宝
+    //int is_uradora();       //里宝
+    //int is_akadora();       //红宝
     //2番
     int is_sanshokudoukou();   //三色同刻，排除四暗刻后再判断
     int is_sankantsu();           //三杠子，排除四杠子后再判断

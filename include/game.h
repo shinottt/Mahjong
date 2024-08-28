@@ -23,7 +23,6 @@ void network_game_process();
 
 void single_game_process(){
 
-
     std::shared_ptr<Rule> rule = std::make_shared<Rule>();
     std::shared_ptr<State> state = std::make_shared<State>();
 
@@ -37,6 +36,10 @@ void single_game_process(){
 
 void network_game_process(){
     
+
+
+
+
 }
 
 

@@ -4,7 +4,8 @@
 #include<string>
 #include<fstream>
 
-const std::string CAREER_FILE_PATH = "career.dat";
+const std::string SINGLE_CAREER_FILE_PATH = "single.dat";
+const std::string NET_CAREER_FILE_PATH = "net.dat";
 
 
 /*
@@ -12,60 +13,65 @@ const std::string CAREER_FILE_PATH = "career.dat";
 
 读写文件
 */
+
+
+
 class Career{
 public:
 
-    //各种役的数量
-    int riichi_ = 0;
-    int double_riichi_ = 0;
-    int tanyao_ = 0;
-    int ippatsu_ = 0;
-    int menzentsumo_ = 0;
-
-    int dora_ = 0;
-    int dora_red_ = 0;
-    int dora_ura_ = 0;
 
 
-    void read_from_file();
-    void write_to_file();
+    void read_from_file_single();
+    void write_to_file_single();
+    void read_from_file_net();
+    void write_to_file_net();
 
-    void print_data_to_file();
-    void print_data_to_console();
+
+    void print_data_to_file_single();
+    void print_data_to_console_single();
+    void print_data_to_file_net();
+    void print_data_to_console_net();
 
 
 };
 
-
-inline void Career::read_from_file(){
+inline void Career::read_from_file_single(){
     std::fstream file_;
-    file_.open(CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
+    file_.open(SINGLE_CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
     while(file_.peek() != EOF){
         file_.read((char*)this, sizeof(*this));
     }
     file_.close();
-    printf("career data read from file: %s\n", CAREER_FILE_PATH.c_str());
+    printf("career data read from file: %s\n", SINGLE_CAREER_FILE_PATH.c_str());
 }
 
 
-inline void Career::write_to_file(){
+inline void Career::write_to_file_single(){
     std::fstream file_;
-    file_.open(CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
+    file_.open(SINGLE_CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
     file_.write((const char*)this, sizeof(*this));
     file_.close();
-    printf("career data write to file: %s\n", CAREER_FILE_PATH.c_str());
+    printf("career data write to file: %s\n", SINGLE_CAREER_FILE_PATH.c_str());
+}
+
+inline void Career::read_from_file_net(){
+    std::fstream file_;
+    file_.open(NET_CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::in);
+    while(file_.peek() != EOF){
+        file_.read((char*)this, sizeof(*this));
+    }
+    file_.close();
+    printf("career data read from file: %s\n", NET_CAREER_FILE_PATH.c_str());
 }
 
 
-void Career::print_data_to_file(){
-
+inline void Career::write_to_file_net(){
+    std::fstream file_;
+    file_.open(NET_CAREER_FILE_PATH.c_str(), std::ios::binary | std::ios::out | std::ios::trunc);
+    file_.write((const char*)this, sizeof(*this));
+    file_.close();
+    printf("career data write to file: %s\n", NET_CAREER_FILE_PATH.c_str());
 }
-
-void Career::print_data_to_console(){
-    
-}
-
-
 
 
 #endif  // _MAHJONG_CAREER_HEADER_

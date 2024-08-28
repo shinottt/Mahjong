@@ -24,10 +24,10 @@ class Rule{
 public:
 
     bool 食断_;          //食断
-    bool ippatsu_;      //一发
+    bool ippatsu_;      //一发，慕篇无
 
-    bool dora_kan_;     //杠宝牌
-    bool dora_ura_;     //里宝牌
+    bool dora_kan_;     //杠宝牌，慕篇无
+    bool dora_ura_;     //里宝牌，慕篇无
 
     int max_renchan_;   //最大连庄数
 
@@ -88,6 +88,7 @@ public:
 
 
 	/*
+    慕篇无里宝杠宝
 	0-121: 正常摸的牌。122-131: 宝牌指示牌。132-135: 岭上牌
 	宝牌指示牌的对应关系：
 	上层        127(第一张)    128    129    130    131
@@ -102,7 +103,7 @@ public:
 
 
 
-    void tiles_init();           //牌库初始化，暂时不放红宝牌   
+    void tiles_init();           //牌库初始化，还未放红宝牌，红宝牌三张，5m，5p，5s
 
 
 };
