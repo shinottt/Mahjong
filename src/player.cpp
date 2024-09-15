@@ -345,27 +345,36 @@ int Player::cal_yaku(Hu &_cal_hu)
 }
 
 void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
-    //1. 取万
-    for(int i = 0; i < 7; ++i){
+    
+    struct _search_temp{
+        BlockColor _color;
+        int _init_pos;
+        int _back_pos;
+    };
+
+    _search_temp _search_aim[3]{{BlockColor::_MAN, 0, 7},{BlockColor::_PIN, 9, 16},{BlockColor::_SUO, 18, 25}};
+    
+    for(int _i_aim = 0 ; _i_aim < 3; ++_i_aim){     //for _i_aim
+    for(int i = _search_aim[_i_aim]._init_pos; i < _search_aim[_i_aim]._back_pos; ++i){
         if(m_[i] != 0){
-            if(i == 0){
+            if(i == _search_aim[_i_aim]._init_pos){
                 if(m_[i+1]>=1 && m_[i+2]>=1){
                     m_[i]--;
                     m_[i+1]--;
                     m_[i+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i == 1){
+            else if(i == _search_aim[_i_aim]._init_pos+1){
                 if(m_[i-1] >=1 && m_[i+1] >=1){
                     m_[i]--;
                     m_[i-1]--;
                     m_[i+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-1);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i+1] >=1 && m_[i+2] >=1){
@@ -373,18 +382,18 @@ void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i+1]--;
                     m_[i+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i);
                     block_temp_.emplace_back(temp);
                 }
             } 
-            else if( i > 1){
+            else if( i > _search_aim[_i_aim]._init_pos+1){
                 if(m_[i-1] >=1 && m_[i+1] >=1){
                     m_[i]--;
                     m_[i-1]--;
                     m_[i+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-1);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i-1] >=1 && m_[i-2] >=1){
@@ -392,7 +401,7 @@ void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i-1]--;
                     m_[i-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-2);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i+1] >=1 && m_[i+2] >=1){
@@ -400,7 +409,7 @@ void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i+1]--;
                     m_[i+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i);
                     block_temp_.emplace_back(temp);
                 }
@@ -411,7 +420,7 @@ void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_nu
                         m_[i-1]--;
                         m_[i-2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i-2);
                         block_temp_.emplace_back(temp);
                     }
@@ -419,177 +428,41 @@ void Player::search_111_LtoR(std::vector<Block> &block_temp_, Blocknum &block_nu
             }
         }
     }
-    //2. 取筒
-    for(int i = 9; i < 16; ++i){
-        if(m_[i] != 0){
-            if(i == 9){
-                if(m_[i+1]>=1 && m_[i+2]>=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i == 10){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-            } 
-            else if( i > 10){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i] != 0){
-                    if(m_[i-1] >=1 && m_[i-2] >=1){
-                        m_[i]--;
-                        m_[i-1]--;
-                        m_[i-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
-    //3. 取条
-    for(int i = 18; i < 25; ++i){
-        if(m_[i] != 0){
-            if(i == 18){
-                if(m_[i+1]>=1 && m_[i+2]>=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i == 19){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-            } 
-            else if( i > 19){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i] != 0){
-                    if(m_[i-1] >=1 && m_[i-2] >=1){
-                        m_[i]--;
-                        m_[i-1]--;
-                        m_[i-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                        take_111(temp, i-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
+    }   //  for _i_aim
 }
 
 void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_)
 {
-    //1. 取万
-    for(int i = 8; i > 1; --i){
+
+    struct _search_temp{
+        BlockColor _color;
+        int _init_pos;
+        int _back_pos;
+    };
+
+    _search_temp _search_aim[3]{{BlockColor::_MAN, 0, 7},{BlockColor::_PIN, 9, 16},{BlockColor::_SUO, 18, 25}};
+
+    for(int _i_aim = 0 ; _i_aim < 3; ++_i_aim){     //for _i_aim
+    for(int i = _search_aim[_i_aim]._back_pos+1; i > _search_aim[_i_aim]._init_pos+1; --i){
         if(m_[i] != 0){
-            if(i == 8){
+            if(i == _search_aim[_i_aim]._back_pos+1){
                 if(m_[i-1]>=1 && m_[i-2]>=1){
                     m_[i]--;
                     m_[i-1]--;
                     m_[i-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3,true);
                     take_111(temp, i-2);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i == 7){
+            else if(i == _search_aim[_i_aim]._back_pos){
                 if(m_[i-1] >=1 && m_[i+1] >=1){
                     m_[i]--;
                     m_[i-1]--;
                     m_[i+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-1);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i-1] >=1 && m_[i-2] >=1){
@@ -597,18 +470,18 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i-1]--;
                     m_[i-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-2);
                     block_temp_.emplace_back(temp);
                 }
             } 
-            else if( i < 7){
+            else if( i < _search_aim[_i_aim]._back_pos){
                 if(m_[i-1] >=1 && m_[i+1] >=1){
                     m_[i]--;
                     m_[i-1]--;
                     m_[i+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-1);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i-1] >=1 && m_[i-2] >=1){
@@ -616,7 +489,7 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i-1]--;
                     m_[i-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i-2);
                     block_temp_.emplace_back(temp);
                 } else if(m_[i+1] >=1 && m_[i+2] >=1){
@@ -624,7 +497,7 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
                     m_[i+1]--;
                     m_[i+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i);
                     block_temp_.emplace_back(temp);
                 }
@@ -635,7 +508,7 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
                         m_[i+1]--;
                         m_[i+2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i);
                         block_temp_.emplace_back(temp);
                     }
@@ -643,481 +516,42 @@ void Player::search_111_RtoL(std::vector<Block> &block_temp_, Blocknum &block_nu
             }
         }
     }
-    //2. 取筒
-    for(int i = 17; i > 10; --i){
-        if(m_[i] != 0){
-            if(i == 17){
-                if(m_[i-1]>=1 && m_[i-2]>=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i == 16){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                }
-            } 
-            else if( i < 16){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i] != 0){
-                    if(m_[i+1] >=1 && m_[i+2] >=1){
-                        m_[i]--;
-                        m_[i+1]--;
-                        m_[i+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
-    //3. 取条
-    for(int i = 26; i > 19; --i){
-        if(m_[i] != 0){
-            if(i == 26){
-                if(m_[i-1]>=1 && m_[i-2]>=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i == 25){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                }
-            } 
-            else if( i < 25){
-                if(m_[i-1] >=1 && m_[i+1] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-1);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i-1] >=1 && m_[i-2] >=1){
-                    m_[i]--;
-                    m_[i-1]--;
-                    m_[i-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i-2);
-                    block_temp_.emplace_back(temp);
-                } else if(m_[i+1] >=1 && m_[i+2] >=1){
-                    m_[i]--;
-                    m_[i+1]--;
-                    m_[i+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                    take_111(temp, i);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i] != 0){
-                    if(m_[i+1] >=1 && m_[i+2] >=1){
-                        m_[i]--;
-                        m_[i+1]--;
-                        m_[i+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
-                        take_111(temp, i);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
+    }       // for _i_aim
+
 }
 
 void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
-    //1. 取万
-    for(int i1 = 0, i2 = 8; i1 < 7 && i2 > 1; ++i1, --i2){
-        //取左
-        if(m_[i1] != 0){
-            if(i1 == 0){
-                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 == 1){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 > 1){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i1] != 0){
-                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                        m_[i1]--;
-                        m_[i1-1]--;
-                        m_[i1-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                        take_111(temp, i1-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-        //取右
-        if(m_[i2] != 0){
-            if(i2 == 8){
-                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 == 7){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 < 7){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                    m_[i2]--;
-                    m_[i2+1]--;
-                    m_[i2+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i2] != 0){
-                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                        m_[i2]--;
-                        m_[i2+1]--;
-                        m_[i2+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                        take_111(temp, i2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
 
-    //取筒
-    for(int i1 = 9, i2 = 17; i1 < 16 && i2 > 10; ++i1, --i2){
-        //取左
-        if(m_[i1] != 0){
-            if(i1 == 9){
-                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 == 10){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 > 10){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i1] != 0){
-                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                        m_[i1]--;
-                        m_[i1-1]--;
-                        m_[i1-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i1-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-        //取右
-        if(m_[i2] != 0){
-            if(i2 == 17){
-                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 == 16){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 < 16){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                    m_[i2]--;
-                    m_[i2+1]--;
-                    m_[i2+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);  
-                    take_111(temp, i2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i2] != 0){
-                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                        m_[i2]--;
-                        m_[i2+1]--;
-                        m_[i2+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
 
-    //取条
-    for(int i1 = 18, i2 = 26; i1 < 25 && i2 > 19; ++i1, --i2){
-        //取左
+    struct _search_temp{
+        BlockColor _color;
+        int _init_pos;
+        int _back_pos;
+    };
+
+    _search_temp _search_aim[3]{{BlockColor::_MAN, 0, 7},{BlockColor::_PIN, 9, 16},{BlockColor::_SUO, 18, 25}};
+
+    for(int _i_aim = 0 ; _i_aim < 3; ++_i_aim){     //for _i_aim
+    for(int i1 = _search_aim[_i_aim]._init_pos, i2 = _search_aim[_i_aim]._back_pos+1; i1 < _search_aim[_i_aim]._back_pos && i2 > _search_aim[_i_aim]._init_pos+1; ++i1, --i2){
         if(m_[i1] != 0){
-            if(i1 == 18){
+            if(i1 == _search_aim[_i_aim]._init_pos){
                 if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
                     m_[i1]--;
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i1 == 19){
+            else if(i1 == _search_aim[_i_aim]._init_pos+1){
                 if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
                     m_[i1]--;
                     m_[i1-1]--;
                     m_[i1+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1126,18 +560,18 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i1 > 19){
+            else if(i1 > _search_aim[_i_aim]._init_pos+1){
                 if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
                     m_[i1]--;
                     m_[i1-1]--;
                     m_[i1+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1146,7 +580,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1155,7 +589,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1-1]--;
                     m_[i1-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1165,7 +599,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                         m_[i1-1]--;
                         m_[i1-2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i1-2);
                         block_temp_.emplace_back(temp);
                     }
@@ -1174,24 +608,24 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
         }
         //取右
         if(m_[i2] != 0){
-            if(i2 == 26){
+            if(i2 == _search_aim[_i_aim]._back_pos+1){
                 if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3,true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i2 == 25){
+            else if(i2 == _search_aim[_i_aim]._back_pos){
                 if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1200,18 +634,18 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2-1]--;
                     m_[i2-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i2 < 25){
+            else if(i2 < _search_aim[_i_aim]._back_pos){
                 if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1220,7 +654,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2-1]--;
                     m_[i2-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1229,7 +663,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2+1]--;
                     m_[i2+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1239,7 +673,7 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
                         m_[i2+1]--;
                         m_[i2+2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i2);
                         block_temp_.emplace_back(temp);
                     }
@@ -1247,335 +681,40 @@ void Player::search_111_LandR(std::vector<Block> &block_temp_, Blocknum &block_n
             }
         }
     }
+    }   // for _i_aim
 }
 
 void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_num_, int *m_){
-    //取万牌
-    for(int i1 = 0, i2 = 8; i1 < 7 && i2 > 1; ++i1, --i2){
-        //取右
-        if(m_[i2] != 0){
-            if(i2 == 8){
-                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 == 7){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 < 7){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                    m_[i2]--;
-                    m_[i2+1]--;
-                    m_[i2+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i2] != 0){
-                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                        m_[i2]--;
-                        m_[i2+1]--;
-                        m_[i2+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                        take_111(temp, i2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-        //取左
-        if(m_[i1] != 0){
-            if(i1 == 0){
-                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3,true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 == 1){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 > 1){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                    take_111(temp, i1-2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i1] != 0){
-                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                        m_[i1]--;
-                        m_[i1-1]--;
-                        m_[i1-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_MAN,3, true);
-                        take_111(temp, i1-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
 
-    //取筒
-    for(int i1 = 9, i2 = 17; i1 < 16 && i2 > 10; ++i1, --i2){
-        //取右
-        if(m_[i2] != 0){
-            if(i2 == 17){
-                if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 == 16){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i2 < 16){
-                if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
-                    m_[i2]--;
-                    m_[i2-1]--;
-                    m_[i2-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2-2);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                    m_[i2]--;
-                    m_[i2+1]--;
-                    m_[i2+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i2] != 0){
-                    if(m_[i2+1] >= 1 && m_[i2+2] >= 1){
-                        m_[i2]--;
-                        m_[i2+1]--;
-                        m_[i2+2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-        //取左
-        if(m_[i1] != 0){
-            if(i1 == 9){
-                if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3,true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 == 10){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-            }
-            else if(i1 > 10){
-                if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1+1]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
-                    m_[i1]--;
-                    m_[i1+1]--;
-                    m_[i1+2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1);
-                    block_temp_.emplace_back(temp);
-                }
-                else if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                    m_[i1]--;
-                    m_[i1-1]--;
-                    m_[i1-2]--;
-                    block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                    take_111(temp, i1-2);
-                    block_temp_.emplace_back(temp);
-                }
-                if(m_[i1] != 0){
-                    if(m_[i1-1] >= 1 && m_[i1-2] >= 1){
-                        m_[i1]--;
-                        m_[i1-1]--;
-                        m_[i1-2]--;
-                        block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_PIN,3, true);
-                        take_111(temp, i1-2);
-                        block_temp_.emplace_back(temp);
-                    }
-                }
-            }
-        }
-    }
+    struct _search_temp{
+        BlockColor _color;
+        int _init_pos;
+        int _back_pos;
+    };
 
-    //取条
-    for(int i1 = 18, i2 = 26; i1 < 25 && i2 > 19; ++i1, --i2){
+    _search_temp _search_aim[3]{{BlockColor::_MAN, 0, 7},{BlockColor::_PIN, 9, 16},{BlockColor::_SUO, 18, 25}};
+    for(int _i_aim = 0 ; _i_aim < 3; ++_i_aim){     //for _i_aim
+    for(int i1 = _search_aim[_i_aim]._init_pos, i2 = _search_aim[_i_aim]._back_pos+1; i1 < _search_aim[_i_aim]._back_pos && i2 > _search_aim[_i_aim]._init_pos+1; ++i1, --i2){
         //取右
         if(m_[i2] != 0){
-            if(i2 == 26){
+            if(i2 == _search_aim[_i_aim]._back_pos+1){
                 if(m_[i2-1] >= 1 && m_[i2-2] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3,true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
-                } 
+                }
             }
-            else if(i2 == 25){
+            else if(i2 == _search_aim[_i_aim]._back_pos){
                 if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1584,18 +723,18 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2-1]--;
                     m_[i2-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i2 < 25){
+            else if(i2 < _search_aim[_i_aim]._back_pos){
                 if(m_[i2-1] >= 1 && m_[i2+1] >= 1){
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1603,8 +742,8 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2]--;
                     m_[i2-1]--;
                     m_[i2-2]--;
-                    block_num_.num_111++;                    
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    block_num_.num_111++;
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2-2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1613,7 +752,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i2+1]--;
                     m_[i2+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1623,7 +762,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                         m_[i2+1]--;
                         m_[i2+2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i2);
                         block_temp_.emplace_back(temp);
                     }
@@ -1632,24 +771,24 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
         }
         //取左
         if(m_[i1] != 0){
-            if(i1 == 18){
+            if(i1 == _search_aim[_i_aim]._init_pos){
                 if(m_[i1+1] >= 1 && m_[i1+2] >= 1){
                     m_[i1]--;
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3,true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i1 == 19){
+            else if(i1 == _search_aim[_i_aim]._init_pos+1){
                 if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
                     m_[i1]--;
                     m_[i1-1]--;
                     m_[i1+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1658,18 +797,18 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
             }
-            else if(i1 > 19){
+            else if(i1 > _search_aim[_i_aim]._init_pos+1){
                 if(m_[i1-1] >= 1 && m_[i1+1] >= 1){
                     m_[i1]--;
                     m_[i1-1]--;
                     m_[i1+1]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1678,7 +817,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1+1]--;
                     m_[i1+2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1);
                     block_temp_.emplace_back(temp);
                 }
@@ -1687,7 +826,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                     m_[i1-1]--;
                     m_[i1-2]--;
                     block_num_.num_111++;
-                    Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                    Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                     take_111(temp, i1-2);
                     block_temp_.emplace_back(temp);
                 }
@@ -1697,7 +836,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
                         m_[i1-1]--;
                         m_[i1-2]--;
                         block_num_.num_111++;
-                        Block temp(BlockType::_SHUNTSU, BlockColor::_SUO,3, true);
+                        Block temp(BlockType::_SHUNTSU, _search_aim[_i_aim]._color,3, true);
                         take_111(temp, i1-2);
                         block_temp_.emplace_back(temp);
                     }
@@ -1705,6 +844,7 @@ void Player::search_111_RandL(std::vector<Block> &block_temp_, Blocknum &block_n
             }
         }
     }
+    }   // for _i_aim
 }
 
 void Player::search_3_all(std::vector<Block>& block_temp_, Blocknum& block_num_, int *m_){
