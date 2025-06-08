@@ -1,6 +1,6 @@
 # 麻将游戏-咲慕流年
 
-Windows环境使用MinGW编译。
+Windows环境使用MinGW和CMake编译。
 
 
 # 慕篇规则

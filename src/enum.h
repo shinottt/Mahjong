@@ -54,9 +54,9 @@ enum ManType: int {
 };
 
 */
-enum class RequestType: char{
-    _MO, _KAN
-}
+enum RequestType: char{
+    _NEXT_TILE_MO_, _NEXT_TILE_KAN_
+};
 
 // 役的种类
 enum YakuType: int {

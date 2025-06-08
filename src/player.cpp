@@ -675,22 +675,4 @@ void player::take_1_1(block& aim_block, int t1){
     }
 }
 
-void player::receive_tile(RequestType res_type){
-    std::vector<char> send_info;
-    send_info.emplace_back(res_type);
-    client_.Send(std::span<const char>(send_info.data(), send_info.size()));
-    auto response = client_.Receive();
-    tile tile_t(static_cast<TileType>(response[0]));
-    if(static_cast<int>(response[1]) != 0){
-        tile_t.set_red(true);
-    }
-    if(res_type == RequestType::_MO){
-        tile_t.state_ = TileState::_TSUMO;
-    }
-    if(res_type == RequestType::_KAN){
-        tile_t.state_ = TileState::_KAN;
-    }
-    next_tile_ = tile_t;
-}
-
 

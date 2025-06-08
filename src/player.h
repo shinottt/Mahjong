@@ -9,7 +9,6 @@
 #include<memory>
 
 #include"basic.hpp"
-#include"net_server.hpp"
 #include"tile.h"
 #include"state.h"
 
@@ -88,6 +87,7 @@ public:
 /**
  * @class player
  * @brief 表示玩家类
+ * 向中控发送信息时同时发送id，中控根据id区分角色
 */
 class player{
 public:
@@ -111,18 +111,15 @@ public:
 
     player()=default;
 
-    void init(CharacterID id, std::string ip = "127.0.0.1"){
+    void init(CharacterID id){
         id_ = id;
         is_riichi_ = false;
         is_double_riichi_ = false;
 
-        sn_socket t(sn_socket::ConnectType::TCP);
-        client_ = std::move(t);
-        client_.Connect(ip, 12345);
     }
 
     // 向中控请求下一张牌，并接受中控传来的牌信息：摸牌、杠牌     【没有测试】
-    void receive_tile();
+    void receive_tile(RequestType res_type);
     // 向中控发送现在的信息，还没测试
     void send_info(RequestType res_type);
 
@@ -164,7 +161,7 @@ private:
     void take_11(block& aim_block, int t1);
     void take_1_1(block& aim_block, int t1);
 
-    sn_socket client_;
+
 };
 
 
