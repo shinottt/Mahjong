@@ -23,7 +23,8 @@ void game::init(const std::string title, int width, int height){
 
     frame_delay_ = 1e9 / FPS_;
 
-    //asset_store_ = new asset_store(renderer_);
+    asset_store_->init(renderer_);
+    language_manager_->init(Language::Chinese);
 
 }
 
@@ -97,12 +98,10 @@ void game::render(){
 
 
 void game::clean(){
-    /*
-    if(asset_store_){
-        asset_store_->clean();
-        delete asset_store_;
-    }
-    */
+
+    asset_store_.reset();
+    language_manager_.reset();
+
     TTF_DestroyRendererTextEngine(ttf_engine_);
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);

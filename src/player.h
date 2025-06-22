@@ -8,7 +8,7 @@
 #include<algorithm>
 #include<memory>
 
-#include"basic.hpp"
+#include"basicHpp/basic.hpp"
 #include"tile.h"
 #include"state.h"
 
@@ -118,13 +118,12 @@ public:
 
     }
 
-    // 向中控请求下一张牌，并接受中控传来的牌信息：摸牌、杠牌     【没有测试】
+    // 向中控请求下一张牌，并接受中控传来的牌信息：摸牌、杠牌
     void receive_tile(RequestType res_type);
-    // 向中控发送现在的信息，还没测试
+    // 向中控发送现在的信息
     void send_info(RequestType res_type);
 
-    void naki();            // 鸣牌行为：吃、碰、杠、胡，不喊就跳过，没有测试
-
+    void naki();            // 鸣牌行为：吃、碰、杠、胡，不喊就跳过
     // 将手中的牌转化为块，并存入hand_block_中
     void hand_to_block();
 
@@ -240,7 +239,15 @@ public:
 };
 
 /**
+ * 
+ * 
+ * 
+ * 
  * 以下为各个规则的实现
+ * 
+ * 
+ * 
+ * 
 */
 
 // 立直和双立直复合

@@ -32,10 +32,6 @@ public:
         });
         return _instance;
     }
-
-    void print_address(){
-        std::cout<< _instance.get() << std::endl;
-    }
 };
 template<typename T>
 std::shared_ptr<T> singleton<T>::_instance = nullptr;

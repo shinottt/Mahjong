@@ -17,6 +17,7 @@ add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(third_party/SDL_image EXCLUDE_FROM_ALL)
 add_subdirectory(third_party/SDL_ttf EXCLUDE_FROM_ALL)
 
+# harfbuzz库的编译问题
 target_compile_options(harfbuzz PRIVATE
     "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:GNU>>:-Wa,-mbig-obj>"
 )
@@ -27,18 +28,19 @@ set(CPP_FILES
     src/enum.cpp
     src/player.cpp
     src/state.cpp
-    src/language.cpp
     src/game.cpp
     src/object.cpp
-    src/asset_store.cpp
+    src/loadAssets/asset_store.cpp
+    src/loadAssets/language.cpp
     src/center_server.cpp
 )
 
 add_executable(${PROJECT_NAME} ${CPP_FILES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC  
-    ${CMAKE_SOURCE_DIR}/third_party 
-    ${CMAKE_SOURCE_DIR}/include
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/src/
+    ${CMAKE_SOURCE_DIR}/third_party/ 
+    ${CMAKE_SOURCE_DIR}/third_party/asio/include/
 )
 
 target_link_directories(${PROJECT_NAME} PUBLIC 
@@ -51,7 +53,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     SDL3::SDL3
 )
 
-# windows下的socket库
+# 链接windows下的socket库
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PUBLIC ws2_32)
 endif()

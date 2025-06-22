@@ -7,9 +7,10 @@
 #include<SDL3_ttf/SDL_ttf.h>
 #include<glm/glm.hpp>
 
-#include"SDL3Audio.hpp"
-#include"basic.hpp"
-#include"asset_store.h"
+#include"basicHpp/SDL3Audio.hpp"
+#include"basicHpp/basic.hpp"
+#include"loadAssets/asset_store.h"
+#include"loadAssets/language.h"
 
 class game : public singleton<game>{
     friend class singleton<game>;
@@ -42,7 +43,8 @@ private:
     Uint64 frame_delay_ = 0;        //纳秒，在init()中赋值
     float dt_ = 0.0f;
 
-    //asset_store* asset_store_;
+    std::shared_ptr<asset_store> asset_store_ = asset_store::get_instance();
+    std::shared_ptr<language_manager> language_manager_ = language_manager::get_instance();
 
 };
 

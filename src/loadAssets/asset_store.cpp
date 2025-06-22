@@ -7,7 +7,7 @@ void asset_store::load_image(const std::string& file_path){
         SDL_Log("Failed to load image: %s\n Error: %s", file_path.c_str(), SDL_GetError());
         return;
     }
-    textures_[file_path] = texture;
+    textures_.emplace(file_path, texture);      //如果已存在，则不重复加载
 }
 
 void asset_store::load_font(const std::string& file_path, int font_size){
@@ -16,16 +16,18 @@ void asset_store::load_font(const std::string& file_path, int font_size){
         SDL_Log("Failed to load font: %s\n Error: %s", file_path.c_str(), SDL_GetError());
         return;
     }
-    fonts_[file_path + std::to_string(font_size)] = font;
+    fonts_.emplace(file_path + std::to_string(font_size), font);      //如果已存在，则不重复加载
 }
 
 
 SDL_Texture* asset_store::get_image(const std::string& file_path){
     auto iter = textures_.find(file_path);
+    // 如果找不到，则加载并再次查找
     if(iter == textures_.end()){
         load_image(file_path);
         iter = textures_.find(file_path);
     }
+    // 找不到则返回NULL
     if(iter == textures_.end()){
         SDL_Log("Failed to load and get image: %s\n Error: %s", file_path.c_str(), SDL_GetError());
         return NULL;
