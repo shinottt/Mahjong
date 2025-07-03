@@ -7,7 +7,7 @@
 #include<SDL3_ttf/SDL_ttf.h>
 #include<SDL3_image/SDL_image.h>
 
-#include"basicHpp/basic.hpp"
+#include"basic.hpp"
 
 class asset_store : public singleton<asset_store>{
     friend class singleton<asset_store>;

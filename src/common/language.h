@@ -11,7 +11,7 @@
 
 #include<nlohmann/json.hpp>
 
-#include"basicHpp/basic.hpp"
+#include"basic.hpp"
 
 enum class Language{
     Chinese, Japanese, English

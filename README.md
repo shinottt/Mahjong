@@ -3,8 +3,9 @@
 MinGW + CMake
 
 
-# 慕篇规则
-
+慕篇规则
+服务端和客户端分开
+boost.Asio库
 
 
 

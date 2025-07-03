@@ -1,7 +1,4 @@
-/**
- * @author shinottt
- * @brief 主函数
-*/
+
 
 #include"game.h"
 #include<SDL3/SDL.h>

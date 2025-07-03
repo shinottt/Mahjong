@@ -7,10 +7,10 @@
 #include<SDL3_ttf/SDL_ttf.h>
 #include<glm/glm.hpp>
 
-#include"basicHpp/SDL3Audio.hpp"
-#include"basicHpp/basic.hpp"
-#include"loadAssets/asset_store.h"
-#include"loadAssets/language.h"
+#include"SDL3Audio.hpp"
+#include"basic.hpp"
+#include"asset_store.h"
+#include"language.h"
 
 class game : public singleton<game>{
     friend class singleton<game>;

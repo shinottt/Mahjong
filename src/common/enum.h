@@ -8,7 +8,7 @@
 #include<string>
 #include<stdexcept>
 
-#include"loadAssets/language.h"
+#include"language.h"
 
 // 牌的种类，万、饼、条、风、字牌
 enum TileType: int {
