@@ -3,3 +3,5 @@ log.txt
 build/
 
 third_party/asio/
+
+third_party/boost/
